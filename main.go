@@ -66,9 +66,9 @@ func main() {
 		log.Fatal(err)
 	}
 
-	for i := 0; i < len(names); i++ {
+	for _, name := range names {
 		_, err = tx.Exec("INSERT INTO names (id, name, meaning, gender, origin, peoplescount, whenpeoplescount) values ($1, $2, $3, $4, $5, $6, $7)",
-			names[i].Id, names[i].Name, names[i].Meaning, names[i].Gender, names[i].Origin, names[i].PeoplesCount, names[i].WhenPeoplesCount)
+			name.Id, name.Name, name.Meaning, name.Gender, name.Origin, name.PeoplesCount, name.WhenPeoplesCount)
 		if err != nil {
 			tx.Rollback()
 			log.Fatal(err)
