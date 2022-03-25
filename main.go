@@ -38,8 +38,7 @@ func main() {
 		log.Fatalf("error opening names.json file: %s", err)
 	}
 
-	_, err = file.Read(data)
-	if err != nil {
+	if _, err = file.Read(data); err != nil {
 		log.Fatalf("error reading names.json file: %s", err)
 	}
 
@@ -51,15 +50,15 @@ func main() {
 		log.Fatalf("error loading env variables: %s", err.Error())
 	}
 
-	config := fmt.Sprintf("host=%s port=%s user=%s dbname=%s password=%s sslmode=%s",
-		viper.GetString("db.host"),
-		viper.GetString("db.port"),
-		viper.GetString("db.username"),
-		viper.GetString("db.dbname"),
-		os.Getenv("DB_PASSWORD"),
-		viper.GetString("db.sslmode"))
+	db, err := sqlx.Open("postgres",
+		fmt.Sprintf("host=%s port=%s user=%s dbname=%s password=%s sslmode=%s",
+			viper.GetString("db.host"),
+			viper.GetString("db.port"),
+			viper.GetString("db.username"),
+			viper.GetString("db.dbname"),
+			os.Getenv("DB_PASSWORD"),
+			viper.GetString("db.sslmode")))
 
-	db, err := sqlx.Open("postgres", config)
 	if err != nil {
 		log.Fatalf("error opening DB: %s", err)
 	}
