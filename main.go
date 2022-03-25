@@ -23,7 +23,10 @@ type Name struct {
 
 func main() {
 
-	initConfig()
+	err := initConfig()
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	names := make([]Name, 25897)
 	data := make([]byte, 6124971)
