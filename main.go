@@ -26,9 +26,8 @@ func main() {
 
 	log.SetFormatter(new(log.JSONFormatter))
 
-	err := initConfig()
-	if err != nil {
-		log.Fatal(err)
+	if err := initConfig(); err != nil {
+		log.Fatalf("error initializing config: %s", err)
 	}
 
 	names := make([]Name, 25897)
@@ -36,17 +35,18 @@ func main() {
 
 	file, err := os.Open("names.json")
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("error opening names.json file: %s", err)
 	}
 
 	_, err = file.Read(data)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("error reading names.json file: %s", err)
 	}
 
-	err = json.Unmarshal(data, &names)
-	if err != nil {
-		log.Fatal(err)
+	if err := json.Unmarshal(data, &names); err != nil {
+		log.Fatalf("error unmarshaling structers from names.json fie: %s", err)
+	}
+
 	if err := godotenv.Load(); err != nil {
 		log.Fatalf("error loading env variables: %s", err.Error())
 	}
@@ -61,12 +61,12 @@ func main() {
 
 	db, err := sqlx.Open("postgres", config)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("error opening DB: %s", err)
 	}
 
 	err = db.Ping()
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("failed to ping DB: %s", err)
 	}
 
 	tx, err := db.Begin()
