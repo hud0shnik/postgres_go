@@ -3,11 +3,11 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"log"
 	"os"
 
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
+	log "github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 )
 
@@ -22,6 +22,8 @@ type Name struct {
 }
 
 func main() {
+
+	log.SetFormatter(new(log.JSONFormatter))
 
 	err := initConfig()
 	if err != nil {
