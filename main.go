@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"github.com/jmoiron/sqlx"
+	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
@@ -46,6 +47,8 @@ func main() {
 	err = json.Unmarshal(data, &names)
 	if err != nil {
 		log.Fatal(err)
+	if err := godotenv.Load(); err != nil {
+		log.Fatalf("error loading env variables: %s", err.Error())
 	}
 
 	config := fmt.Sprintf("host=%s port=%s user=%s dbname=%s password=%s sslmode=%s",
@@ -53,7 +56,7 @@ func main() {
 		viper.GetString("db.port"),
 		viper.GetString("db.username"),
 		viper.GetString("db.dbname"),
-		viper.GetString("db.password"),
+		os.Getenv("DB_PASSWORD"),
 		viper.GetString("db.sslmode"))
 
 	db, err := sqlx.Open("postgres", config)
@@ -68,7 +71,7 @@ func main() {
 
 	tx, err := db.Begin()
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("transaction error: %s", err)
 	}
 
 	for _, name := range names {
@@ -76,7 +79,7 @@ func main() {
 			name.Id, name.Name, name.Meaning, name.Gender, name.Origin, name.PeoplesCount, name.WhenPeoplesCount)
 		if err != nil {
 			tx.Rollback()
-			log.Fatal(err)
+			log.Fatalf("error inserting into db: %s", err)
 			return
 		}
 	}
