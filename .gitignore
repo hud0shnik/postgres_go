@@ -5,3 +5,5 @@ names.json
 configs
 
 .env
+
+*.yml

@@ -37,8 +37,7 @@ func main() {
 		log.Fatalf("error opening DB: %s", err)
 	}
 
-	err = db.Ping()
-	if err != nil {
+	if err := db.Ping(); err != nil {
 		log.Fatalf("failed to ping DB: %s", err)
 	}
 

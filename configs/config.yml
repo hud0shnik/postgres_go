@@ -1,6 +1,0 @@
-db:
-    username: "username"
-    host: "localhost"
-    port: "1111"
-    dbname: "postgresdb"
-    sslmode: "disable"
