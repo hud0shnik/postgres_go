@@ -1,4 +1,7 @@
 .idea
+
 names.json
-configs/
+
+configs
+
 .env
