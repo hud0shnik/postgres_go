@@ -41,10 +41,16 @@ func main() {
 		log.Fatalf("failed to ping DB: %s", err)
 	}
 
-	if err := postgres.InitData(db); err != nil {
-		log.Fatalf("failed to init data: %s", err)
+	fmt.Println("Do you need me to initialize data? (y/n) ")
+	ans := ""
 
+	if fmt.Scanln(&ans); ans == "y" {
+		if err := postgres.InitData(db); err != nil {
+			log.Fatalf("failed to init data: %s", err)
+
+		}
 	}
+
 	fmt.Println("dONE")
 }
 
