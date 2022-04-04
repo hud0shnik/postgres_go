@@ -24,37 +24,37 @@ func main() {
 		log.Fatalf("error loading env variables: %s", err.Error())
 	}
 
-	fmt.Println("Do you need me to initialize data? (y/n) ")
+	fmt.Println("Do you need me to change host adress? (y/n) ")
 	ans, host := "", ""
 
 	if fmt.Scanln(&ans); ans == "y" {
+		fmt.Println("Input custom host adress:")
+		fmt.Scanln(&host)
+	} else {
+		host = viper.GetString("db.host")
+	}
 
-		fmt.Println("Do you need me to change host adress? (y/n) ")
+	db, err := sqlx.Open("postgres",
+		fmt.Sprintf("host=%s port=%s user=%s dbname=%s password=%s sslmode=%s",
+			host,
+			viper.GetString("db.port"),
+			viper.GetString("db.username"),
+			viper.GetString("db.dbname"),
+			os.Getenv("DB_PASSWORD"),
+			viper.GetString("db.sslmode")))
 
-		if fmt.Scanln(&ans); ans == "y" {
-			fmt.Println("Please input custom host adress:")
-			fmt.Scanln(&host)
-		} else {
-			host = viper.GetString("db.host")
-		}
+	if err != nil {
+		log.Fatalf("error opening DB: %s", err)
+	}
 
-		db, err := sqlx.Open("postgres",
-			fmt.Sprintf("host=%s port=%s user=%s dbname=%s password=%s sslmode=%s",
-				host,
-				viper.GetString("db.port"),
-				viper.GetString("db.username"),
-				viper.GetString("db.dbname"),
-				os.Getenv("DB_PASSWORD"),
-				viper.GetString("db.sslmode")))
+	if err := db.Ping(); err != nil {
+		log.Fatalf("failed to ping DB: %s", err)
+	}
 
-		if err != nil {
-			log.Fatalf("error opening DB: %s", err)
-		}
+	fmt.Println("Successful connection to DB")
+	fmt.Println("Do you need me to initialize data? (y/n) ")
 
-		if err := db.Ping(); err != nil {
-			log.Fatalf("failed to ping DB: %s", err)
-		}
-
+	if fmt.Scanln(&ans); ans == "y" {
 		if err := postgres.InitData(db); err != nil {
 			log.Fatalf("failed to init data: %s", err)
 
