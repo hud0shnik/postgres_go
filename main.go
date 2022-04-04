@@ -24,9 +24,19 @@ func main() {
 		log.Fatalf("error loading env variables: %s", err.Error())
 	}
 
+	fmt.Println("Do you need me to change host adress? (y/n) ")
+	ans, host := "", ""
+
+	if fmt.Scanln(&ans); ans == "y" {
+		fmt.Println("Input custom host adress:")
+		fmt.Scanln(&host)
+	} else {
+		host = viper.GetString("db.host")
+	}
+
 	db, err := sqlx.Open("postgres",
 		fmt.Sprintf("host=%s port=%s user=%s dbname=%s password=%s sslmode=%s",
-			viper.GetString("db.host"),
+			host,
 			viper.GetString("db.port"),
 			viper.GetString("db.username"),
 			viper.GetString("db.dbname"),
@@ -42,7 +52,6 @@ func main() {
 	}
 
 	fmt.Println("Do you need me to initialize data? (y/n) ")
-	ans := ""
 
 	if fmt.Scanln(&ans); ans == "y" {
 		if err := postgres.InitData(db); err != nil {
