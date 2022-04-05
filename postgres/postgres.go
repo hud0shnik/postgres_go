@@ -2,7 +2,6 @@ package postgres
 
 import (
 	"encoding/json"
-	"fmt"
 	"os"
 
 	"github.com/jmoiron/sqlx"
@@ -61,10 +60,7 @@ func GetName(db *sqlx.DB, name string) Name {
 
 	var item Name
 
-	query := fmt.Sprintf(`SELECT * FROM names ti WHERE ti.name = $1`)
-	if err := db.Get(&item, query, name); err != nil {
-		return item
-	}
+	db.Get(&item, "SELECT * FROM names ti WHERE ti.name = $1", name)
 
 	return item
 }
