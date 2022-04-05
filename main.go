@@ -34,6 +34,8 @@ func main() {
 		host = viper.GetString("db.host")
 	}
 
+	fmt.Println("Conecting to DB ...")
+
 	db, err := sqlx.Open("postgres",
 		fmt.Sprintf("host=%s port=%s user=%s dbname=%s password=%s sslmode=%s",
 			host,
