@@ -19,7 +19,7 @@ type Name struct {
 
 func InitData(db *sqlx.DB) error {
 
-	data := make([]byte, 6124971)
+	data := make([]byte, 6346950) //6113867 4429392
 	names := make([]Name, 25897)
 
 	file, err := os.Open("names.json")
