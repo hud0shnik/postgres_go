@@ -63,7 +63,11 @@ func main() {
 		}
 	}
 
-	fmt.Println("dONE")
+	fmt.Println("Please insert name")
+	fmt.Scanln(&ans)
+	fmt.Println(postgres.GetName(db, ans))
+
+	fmt.Println("\nDone.")
 }
 
 func initConfig() error {
