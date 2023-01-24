@@ -8,6 +8,7 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
+// Структура имени
 type Name struct {
 	Id               int    `json:"id" db:"id"`
 	Name             string `json:"name" binding:"required"`
@@ -18,35 +19,44 @@ type Name struct {
 	WhenPeoplesCount string `json:"WhenPeoplesCount" binding:"required"`
 }
 
+// Функция записи данных в бд
 func InitData(db *sqlx.DB) error {
 
-	data := make([]byte, 6124971) //6113867 4429392 6346950
+	// Слайс символов и слайс имён
+	data := make([]byte, 6124971) //если не работает, попробовать 6113867 4429392 6346950
 	names := make([]Name, 25897)
 
+	// Открытие файла с именами
 	file, err := os.Open("names.json")
 	if err != nil {
 		return err
 	}
 
+	// Запись текста файла в слайс символов
 	if _, err = file.Read(data); err != nil {
 		return err
 	}
 
+	// Перевод слайса символов в слайс имён
 	if err := json.Unmarshal(data, &names); err != nil {
 		return err
 
 	}
 
+	// Создание транзакции
 	tx, err := db.Begin()
 	if err != nil {
 		return err
 
 	}
 
+	// Проход по всем именам
 	for _, name := range names {
 
+		// Вывод в консоль уведомления о добавлении имени в транзакцию
 		fmt.Println("Inserting name №", name.Id, " / ", 25897)
 
+		// Добавление запроса к транзакции его проверка
 		_, err = tx.Exec("INSERT INTO names (id, name, meaning, gender, origin, peoplescount, whenpeoplescount) values ($1, $2, $3, $4, $5, $6, $7)",
 			name.Id, name.Name, name.Meaning, name.Gender, name.Origin, name.PeoplesCount, name.WhenPeoplesCount)
 		if err != nil {
@@ -57,10 +67,13 @@ func InitData(db *sqlx.DB) error {
 
 	}
 
+	// Исполнение транзакции
 	tx.Commit()
+
 	return nil
 }
 
+// Функция получения имени из бв
 func GetName(db *sqlx.DB, name string) Name {
 
 	var item Name
