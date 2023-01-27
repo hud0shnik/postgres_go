@@ -79,7 +79,7 @@ func GetName(db *sqlx.DB, name string) Name {
 
 	var item Name
 
-	db.Get(&item, "SELECT * FROM names ti WHERE ti.name = $1", name)
+	db.Get(&item, "SELECT * FROM names WHERE name = $1", name)
 
 	return item
 }
