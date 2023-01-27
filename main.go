@@ -16,11 +16,13 @@ func main() {
 
 	log.SetFormatter(new(log.JSONFormatter))
 
-	if err := initConfig(); err != nil {
+	err := initConfig()
+	if err != nil {
 		log.Fatalf("error initializing config: %s", err)
 	}
 
-	if err := godotenv.Load(); err != nil {
+	err = godotenv.Load()
+	if err != nil {
 		log.Fatalf("error loading env variables: %s", err.Error())
 	}
 
@@ -49,7 +51,8 @@ func main() {
 		log.Fatalf("error opening DB: %s", err)
 	}
 
-	if err := db.Ping(); err != nil {
+	err = db.Ping()
+	if err != nil {
 		log.Fatalf("failed to ping DB: %s", err)
 	}
 
@@ -57,10 +60,12 @@ func main() {
 	fmt.Println("Do you need me to initialize data? (y/n) ")
 
 	if fmt.Scanln(&ans); ans == "y" {
-		if err := postgres.InitData(db); err != nil {
-			log.Fatalf("failed to init data: %s", err)
 
+		err = postgres.InitData(db)
+		if err != nil {
+			log.Fatalf("failed to init data: %s", err)
 		}
+
 	}
 
 	fmt.Println("Please insert name")
