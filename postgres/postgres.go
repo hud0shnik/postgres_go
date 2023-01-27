@@ -51,16 +51,17 @@ func InitData(db *sqlx.DB) error {
 	}
 
 	// Проход по всем именам
-	for _, name := range names {
+	for i, name := range names {
 
 		// Вывод в консоль уведомления о добавлении имени в транзакцию
-		fmt.Println("Inserting name №", name.Id, " / ", 25897)
+		fmt.Println("Inserting...\t", i, "/", 25897)
 
 		// Добавление запроса к транзакции его проверка
 		_, err = tx.Exec("INSERT INTO names (id, name, meaning, gender, origin, peoplescount, whenpeoplescount) values ($1, $2, $3, $4, $5, $6, $7)",
 			name.Id, name.Name, name.Meaning, name.Gender, name.Origin, name.PeoplesCount, name.WhenPeoplesCount)
 		if err != nil {
 			tx.Rollback()
+			fmt.Println("Exec error:", err)
 			return err
 
 		}
