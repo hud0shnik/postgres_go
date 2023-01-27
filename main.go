@@ -16,17 +16,20 @@ func main() {
 
 	log.SetFormatter(new(log.JSONFormatter))
 
+	// Инициализация конфига
 	err := initConfig()
 	if err != nil {
 		log.Fatalf("error initializing config: %s", err)
 	}
 
+	// Инициализация переменных окружения
 	err = godotenv.Load()
 	if err != nil {
 		log.Fatalf("error loading env variables: %s", err.Error())
 	}
 
 	fmt.Println("Do you need me to change host adress? (y/n) ")
+	// Проверка на новый адрес БД
 	ans, host := "", ""
 
 	if fmt.Scanln(&ans); ans == "y" {
@@ -38,6 +41,7 @@ func main() {
 
 	fmt.Println("Conecting to DB ...")
 
+	// Подключение к БД
 	db, err := sqlx.Open("postgres",
 		fmt.Sprintf("host=%s port=%s user=%s dbname=%s password=%s sslmode=%s",
 			host,
@@ -51,16 +55,19 @@ func main() {
 		log.Fatalf("error opening DB: %s", err)
 	}
 
+	// Проверка подключения
 	err = db.Ping()
 	if err != nil {
 		log.Fatalf("failed to ping DB: %s", err)
 	}
 
+	// Проверка на инициализацию данных
 	fmt.Println("Successful connection to DB")
 	fmt.Println("Do you need me to initialize data? (y/n) ")
 
 	if fmt.Scanln(&ans); ans == "y" {
 
+		// Инициализация данных
 		err = postgres.InitData(db)
 		if err != nil {
 			log.Fatalf("failed to init data: %s", err)
@@ -68,13 +75,17 @@ func main() {
 
 	}
 
+	// Получение имени
 	fmt.Println("Please insert name")
 	fmt.Scanln(&ans)
+
+	// Вывод данных
 	fmt.Println(postgres.GetName(db, ans))
 
 	fmt.Println("\nDone.")
 }
 
+// Функция инициализации конфига
 func initConfig() error {
 	viper.AddConfigPath("configs")
 	viper.SetConfigName("config")
