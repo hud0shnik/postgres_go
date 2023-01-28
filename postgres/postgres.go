@@ -83,3 +83,15 @@ func GetName(db *sqlx.DB, name string) Name {
 
 	return item
 }
+func AddName(db *sqlx.DB, name Name) error {
+	_, err := db.Exec("INSERT INTO names (id, name, meaning, gender, origin, peoplescount, whenpeoplescount) values ($1, $2, $3, $4, $5, $6, $7)",
+		name.Id, name.Name, name.Meaning, name.Gender, name.Origin, name.PeoplesCount, name.WhenPeoplesCount)
+	if err != nil {
+		fmt.Println("Exec error:", err)
+		return err
+
+	}
+
+	return nil
+
+}
