@@ -91,6 +91,9 @@ func main() {
 		})
 		if err != nil {
 			log.Fatal("failed to add data: %s", err)
+		}
+	}
+
 	fmt.Println("\nDone.")
 }
 
