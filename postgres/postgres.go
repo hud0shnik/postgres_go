@@ -74,7 +74,7 @@ func InitData(db *sqlx.DB) error {
 	return nil
 }
 
-// Функция получения имени из бв
+// Функция получения имени из БД
 func GetName(db *sqlx.DB, name string) Name {
 
 	var item Name
@@ -83,7 +83,11 @@ func GetName(db *sqlx.DB, name string) Name {
 
 	return item
 }
+
+// Функция добавления имени в БД
 func AddName(db *sqlx.DB, name Name) error {
+
+	// Добавление имени в БД
 	_, err := db.Exec("INSERT INTO names (id, name, meaning, gender, origin, peoplescount, whenpeoplescount) values ($1, $2, $3, $4, $5, $6, $7)",
 		name.Id, name.Name, name.Meaning, name.Gender, name.Origin, name.PeoplesCount, name.WhenPeoplesCount)
 	if err != nil {
