@@ -78,6 +78,19 @@ func main() {
 	// Вывод данных
 	fmt.Println(postgres.GetName(db, ans))
 
+	fmt.Println("Do you need me to add name? (y/n) ")
+	if fmt.Scanln(&ans); ans == "y" {
+		err = postgres.AddName(db, postgres.Name{
+			Id:               8,
+			Name:             "Danila",
+			Meaning:          "-",
+			Gender:           "Male",
+			Origin:           "Russian",
+			PeoplesCount:     1,
+			WhenPeoplesCount: "2023-01-28T28 : 13 : 25.467",
+		})
+		if err != nil {
+			log.Fatal("failed to add data: %s", err)
 	fmt.Println("\nDone.")
 }
 
