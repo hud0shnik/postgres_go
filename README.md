@@ -1,4 +1,4 @@
-# postgres_go
+# postgres_go (АРХИВ)
 
 <h3 align="left">🛠 Стек технологий:</h3>
 
